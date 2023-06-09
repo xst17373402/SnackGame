@@ -43,7 +43,7 @@ private:
 private:
 	MainWindow& wnd;
 	Graphics gfx;
-	//Keyboard kbd;
+
 	/********************************/
 	/*  User Variables              */
 	/********************************/

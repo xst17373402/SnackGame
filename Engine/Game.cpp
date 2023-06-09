@@ -43,39 +43,22 @@ void Game::Go()
 void Game::UpdateModel()
 {
     if (snack.IsSnackDie()) return;  // 目前的逻辑是snack死了就停了
-    Keyboard::Event event = wnd.kbd.ReadKey();  // 从kbd类中获取一个key事件
-    // 如果是↑↓←→的按下事件，则改变snack移动方向
-    if (event.IsPress())
+    
+    if (wnd.kbd.KeyIsPressed(VK_UP))
     {
-        unsigned char key_msg = event.GetCode();
-        switch (key_msg)
-        {
-        case VK_UP:
-        {
-            snack.SnackMoveUp();
-            break;
-        }
-        case VK_DOWN:
-        {
-            snack.SnackMoveDown();
-            break;
-        }
-        case VK_LEFT:
-        {
-            snack.SnackMoveLeft();
-            break;
-        }
-        case VK_RIGHT:
-        {
-            snack.SnackMoveRight();
-            break;
-        }
-        default:
-        {
-            snack.SnackKeepMoving();
-            break;
-        }
-        }
+        snack.SnackMoveUp();
+    }
+    else if (wnd.kbd.KeyIsPressed(VK_DOWN))
+    {
+        snack.SnackMoveDown();
+    }
+    else if (wnd.kbd.KeyIsPressed(VK_LEFT))
+    {
+        snack.SnackMoveLeft();
+    }
+    else if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+    {
+        snack.SnackMoveRight();
     }
     else
     {
@@ -91,9 +74,13 @@ void Game::ComposeFrame()
     unsigned int snack_len = snack.GetLength();
     // 根据snack_len 控制休眠时间，snack_len越大 刷新速度越快
     if (30 > 60 - 3 * snack_len)
+    {
         Sleep(30);
+    }
     else
+    {
         Sleep(60 - 3 * snack_len);
+    }
 
     // 画出apple的位置
     unsigned int size    = apple.GetAppleSize();
