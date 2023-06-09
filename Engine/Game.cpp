@@ -24,20 +24,40 @@
  **
  ******************************************************************************************/
 #include "Game.h"
+
+#include <thread>
+
 #include <windows.h>
 #include "MainWindow.h"
 
 #include "Block.h"
 
-Game::Game(MainWindow& wnd) : wnd(wnd), gfx(wnd), snack(), apple()
+Game::Game(MainWindow& wnd)
+    : wnd(wnd)
+    , gfx(wnd)
+    , snack()
+    , apple()
+    , m_last_time(std::chrono::steady_clock::now())
 {}
 
 void Game::Go()
 {
+    auto curr_time = std::chrono::steady_clock::now();
+
     gfx.BeginFrame();
     UpdateModel();
     ComposeFrame();
     gfx.EndFrame();
+
+    auto duration =
+        std::chrono::duration<float>(curr_time - m_last_time).count();
+    if (duration < k_max_fps_delta_time)
+    {
+        std::this_thread::sleep_for(
+            std::chrono::duration<float>(k_max_fps_delta_time - duration));
+    }
+
+    m_last_time = curr_time;
 }
 
 void Game::UpdateModel()
@@ -52,17 +72,6 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-    unsigned int snack_len = snack.GetLength();
-    // 根据snack_len 控制休眠时间，snack_len越大 刷新速度越快
-    if (30 > 60 - 3 * snack_len)
-    {
-        Sleep(30);
-    }
-    else
-    {
-        Sleep(60 - 3 * snack_len);
-    }
-
     // 画出apple的位置
     unsigned int size    = apple.GetAppleSize();
     unsigned int apple_x = size * apple.GetAppleX();
