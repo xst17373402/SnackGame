@@ -7,12 +7,12 @@ bool Snack::IsSnackDie() const
 
 bool Snack::IsSnackStop() const
 {
-    return (this->snack_state == 0);
+    return (this->snack_state == SnakeDirection::Stop);
 }
 
 void Snack::SnackMoveUp()
 {
-    if (snack_state == 2)  // snack在向下移动时 不能向上移动
+    if (snack_state == SnakeDirection::Down)  // snack在向下移动时 不能向上移动
     {
         move_success = 0;  // 本次移动失败
         return;
@@ -24,7 +24,7 @@ void Snack::SnackMoveUp()
         snack_q.push_front(temp_block);
         move_success = 1;
         // snack_q.pop_back();
-        snack_state = 1;
+        snack_state = SnakeDirection::Up;
     }
     else
     {
@@ -36,7 +36,7 @@ void Snack::SnackMoveUp()
 
 void Snack::SnackMoveDown()
 {
-    if (snack_state == 1)
+    if (snack_state == SnakeDirection::Up)
     {
         move_success = 0;  // 本次移动失败
         return;
@@ -47,7 +47,7 @@ void Snack::SnackMoveDown()
         snack_q.push_front(temp_block);
         move_success = 1;
         // snack_q.pop_back();
-        snack_state = 2;
+        snack_state = SnakeDirection::Down;
     }
     else
     {
@@ -58,7 +58,7 @@ void Snack::SnackMoveDown()
 
 void Snack::SnackMoveLeft()
 {
-    if (snack_state == 4)
+    if (snack_state == SnakeDirection::Right)
     {
         move_success = 0;  // 本次移动失败
         return;
@@ -69,7 +69,7 @@ void Snack::SnackMoveLeft()
         snack_q.push_front(temp_block);
         move_success = 1;
         // snack_q.pop_back();
-        snack_state = 3;
+        snack_state = SnakeDirection::Left;
     }
     else
     {
@@ -80,7 +80,7 @@ void Snack::SnackMoveLeft()
 
 void Snack::SnackMoveRight()
 {
-    if (snack_state == 3)
+    if (snack_state == SnakeDirection::Left)
     {
         move_success = 0;  // 本次移动失败
         return;
@@ -91,7 +91,7 @@ void Snack::SnackMoveRight()
         snack_q.push_front(temp_block);
         move_success = 1;
         // snack_q.pop_back();
-        snack_state = 4;
+        snack_state = SnakeDirection::Right;
     }
     else
     {
@@ -105,22 +105,22 @@ void Snack::SnackKeepMoving()  // 保持前一个状态继续移动
     Block temp_block = this->snack_q.front();
     switch (snack_state)
     {
-    case 1:
+    case SnakeDirection::Up:
     {
         SnackMoveUp();
         break;
     }
-    case 2:
+    case SnakeDirection::Down:
     {
         SnackMoveDown();
         break;
     }
-    case 3:
+    case SnakeDirection::Left:
     {
         SnackMoveLeft();
         break;
     }
-    case 4:
+    case SnakeDirection::Right:
     {
         SnackMoveRight();
         break;

@@ -11,6 +11,16 @@
 
 class Snack  // 蛇对象
 {
+private:
+    enum class SnakeDirection
+    {
+        Stop,
+        Right,
+        Left,
+        Up,
+        Down
+    };
+
 public:
     Snack()
     {
@@ -53,6 +63,6 @@ private:
     std::list<Block> snack_q;  // 蛇对象的身体由一个block链表组成
     unsigned int     snack_len    = 1;
     bool             snack_die    = false;
-    int              snack_state  = 0;
+    SnakeDirection   snack_state  = SnakeDirection::Stop;
     bool             move_success = false;  // 判断是否移动成功
 };
