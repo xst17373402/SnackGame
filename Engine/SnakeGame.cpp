@@ -178,6 +178,30 @@ std::list<Block>::iterator Snack::GetEnd()
     return this->snack_q.end();
 }
 
+void Snack::processKeyboardInput(const Keyboard& kbd)
+{
+    if (kbd.KeyIsPressed(VK_UP))
+    {
+        SnackMoveUp();
+    }
+    else if (kbd.KeyIsPressed(VK_DOWN))
+    {
+        SnackMoveDown();
+    }
+    else if (kbd.KeyIsPressed(VK_LEFT))
+    {
+        SnackMoveLeft();
+    }
+    else if (kbd.KeyIsPressed(VK_RIGHT))
+    {
+        SnackMoveRight();
+    }
+    else
+    {
+        SnackKeepMoving();
+    }
+}
+
 unsigned int Snack::GetLength()
 {
     return this->snack_len;

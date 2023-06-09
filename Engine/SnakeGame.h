@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Graphics.h"
+#include "Keyboard.h"
 
 #include "Block.h"
 #include "Apple.h"
@@ -29,12 +30,14 @@ public:
     bool IsSnackStop() const;
     bool IsMoveSuccess() const;
 
+private:
     void SnackMoveUp();
     void SnackMoveDown();
     void SnackMoveLeft();
     void SnackMoveRight();
     void SnackKeepMoving();
 
+public:
     void                       SnackGrow();
     void                       SnackTryEat(Apple& apple);
     unsigned int               GetHeadX();
@@ -43,6 +46,8 @@ public:
     unsigned int               GetLength();
     std::list<Block>::iterator GetHead();
     std::list<Block>::iterator GetEnd();
+
+    void processKeyboardInput(const Keyboard& kbd);
 
 private:
     std::list<Block> snack_q;  // 蛇对象的身体由一个block链表组成

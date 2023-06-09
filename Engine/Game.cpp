@@ -44,26 +44,7 @@ void Game::UpdateModel()
 {
     if (snack.IsSnackDie()) return;  // 目前的逻辑是snack死了就停了
     
-    if (wnd.kbd.KeyIsPressed(VK_UP))
-    {
-        snack.SnackMoveUp();
-    }
-    else if (wnd.kbd.KeyIsPressed(VK_DOWN))
-    {
-        snack.SnackMoveDown();
-    }
-    else if (wnd.kbd.KeyIsPressed(VK_LEFT))
-    {
-        snack.SnackMoveLeft();
-    }
-    else if (wnd.kbd.KeyIsPressed(VK_RIGHT))
-    {
-        snack.SnackMoveRight();
-    }
-    else
-    {
-        snack.SnackKeepMoving();
-    }
+    snack.processKeyboardInput(wnd.kbd);
 
     // 每次移动过后判断snack有没有吃到苹果
     snack.SnackTryEat(apple);
