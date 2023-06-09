@@ -1,316 +1,184 @@
 #include "SnakeGame.h"
-static constexpr int ScreenWidth  = 800;
-static constexpr int ScreenHeight = 600;
-static constexpr int BlockSize = 10;
-//BlockSizeÎª10£¬Ôò800¡Á600µÄ´°¿Ú½«±»»®·ÖÎª80¡Á60µÄ×ø±ê
-
-
-//ÅĞ¶ÏÎ»ÖÃx£¬yÊÇ·ñ´æÔÚBlock£¬ÊÇÎªwallÔ¤ÁôµÄº¯Êı£¬ÏÖÔÚÃ»Ìí¼ÓÇ½µÄÂß¼­£¬ËùÒÔÃ»ÓÃµ½
-bool Block::IsBlock(unsigned int x,unsigned int y) const
-{
-	return (x == this->block_x && y == this->block_y);
-}
-
-unsigned int Block::GetBlockX() const
-{
-	return this->block_x;
-}
-
-unsigned int Block::GetBlockY() const
-{
-	return this->block_y;
-}
-
-unsigned int Block::GetBlockSize() const
-{
-	return this->block_size;
-}
-
-bool Block::BlockMoveUp()  //block¿éÏòÉÏÒÆ¶¯
-{
-	if (this->block_y > 0)  //blockµ±Ç°y´óÓÚ0 ²ÅÄÜÏòÉÏÒÆ¶¯£¬·ñÔòÒÆ¶¯Ê§°Ü£¬·µ»Øfalse
-	{
-		this->block_y--;
-		return true;
-	}
-	else
-		return false;	
-}
-
-bool Block::BlockMoveDown()
-{
-	if (this->block_y < (ScreenHeight / this->block_size - 1))  
-	{
-		this->block_y++;
-		return true;
-	}
-	else
-		return false;
-}
-
-bool Block::BlockMoveLeft()
-{
-	if (this->block_x > 0)
-	{
-		this->block_x--;
-		return true;
-	}
-	else
-		return false;
-}
-
-bool Block::BlockMoveRight()
-{
-	if (this->block_x < (ScreenWidth / this->block_size - 1))
-	{
-		this->block_x++;
-		return true;
-	}
-	else
-		return false;
-}
-
-void Block::KeepGoing()   //¸ù¾İÖ®Ç°µÄÒÆ¶¯×´Ì¬ ÒÆ¶¯Block
-{
-	switch (block_state)
-	{
-	case 1:
-	{
-		BlockMoveUp();
-		break;
-	}
-	case 2:
-	{
-		BlockMoveDown();
-		break;
-	}
-	case 3:
-	{
-		BlockMoveLeft();
-		break;
-	}
-	case 4:
-	{
-		BlockMoveRight();
-		break;
-	}
-	default:
-	{
-		break;
-	}
-	}
-}
-
-
-unsigned int Apple::GetAppleX()
-{
-	return this->apple_x;
-}
-
-unsigned int Apple::GetAppleY()
-{
-	return this->apple_y;
-}
-
-unsigned int Apple::GetAppleSize()
-{
-	return this->apple_size;
-}
-
-void Apple::RePlace()  //ÖØĞÂËæ»ú·ÅÖÃappleÎ»ÖÃ
-{
-	this->apple_x = rand() % (ScreenWidth / BlockSize);
-	this->apple_y = rand() % (ScreenHeight / BlockSize);
-}
-
 
 bool Snack::IsSnackDie() const
 {
-	return this->snack_die;
+    return this->snack_die;
 }
 
 bool Snack::IsSnackStop() const
 {
-	return (this->snack_state == 0);
+    return (this->snack_state == 0);
 }
-
-
 
 void Snack::SnackMoveUp()
 {
-	if (snack_state == 2) //snackÔÚÏòÏÂÒÆ¶¯Ê± ²»ÄÜÏòÉÏÒÆ¶¯
-	{
-		move_success = 0; //±¾´ÎÒÆ¶¯Ê§°Ü
-		return;
-	}
-	Block temp_block = this->snack_q.front();  //½«Í·²¿µÄblockÈ¡³ö
-	if (temp_block.BlockMoveUp())     //Èç¹ûtemp_blockÒÆ¶¯³É¹¦£¬Ôò·ÅÔÚÁ´±íµÄÍ·²¿£¬²¢¼ÇÂ¼snackÒÆ¶¯×´Ì¬
-	{
-		snack_q.push_front(temp_block);  
-		move_success = 1;
-		//snack_q.pop_back();
-		snack_state = 1;
-	}
-	else
-	{
-		move_success = 0;
-		snack_die = true;  //Èç¹ûtemp_blockÃ»ÓĞÒÆ¶¯³É¹¦£¬ÔòËµÃ÷Åöµ½ÁË´°¿Ú±ß¿ò£¬Éßdie
-	}
+    if (snack_state == 2)  // snackåœ¨å‘ä¸‹ç§»åŠ¨æ—¶ ä¸èƒ½å‘ä¸Šç§»åŠ¨
+    {
+        move_success = 0;  // æœ¬æ¬¡ç§»åŠ¨å¤±è´¥
+        return;
+    }
+    Block temp_block = this->snack_q.front();  // å°†å¤´éƒ¨çš„blockå–å‡º
+    if (temp_block
+            .BlockMoveUp())  // å¦‚æœtemp_blockç§»åŠ¨æˆåŠŸï¼Œåˆ™æ”¾åœ¨é“¾è¡¨çš„å¤´éƒ¨ï¼Œå¹¶è®°å½•snackç§»åŠ¨çŠ¶æ€
+    {
+        snack_q.push_front(temp_block);
+        move_success = 1;
+        // snack_q.pop_back();
+        snack_state = 1;
+    }
+    else
+    {
+        move_success = 0;
+        snack_die =
+            true;  // å¦‚æœtemp_blockæ²¡æœ‰ç§»åŠ¨æˆåŠŸï¼Œåˆ™è¯´æ˜ç¢°åˆ°äº†çª—å£è¾¹æ¡†ï¼Œè›‡die
+    }
 }
 
 void Snack::SnackMoveDown()
 {
-	if (snack_state == 1)
-	{
-		move_success = 0; //±¾´ÎÒÆ¶¯Ê§°Ü
-		return;
-	}
-	Block temp_block = this->snack_q.front();
-	if (temp_block.BlockMoveDown())
-	{
-		snack_q.push_front(temp_block);
-		move_success = 1;
-		//snack_q.pop_back();
-		snack_state = 2;
-	}
-	else
-	{
-		move_success = 0;
-		snack_die = true;
-	}
+    if (snack_state == 1)
+    {
+        move_success = 0;  // æœ¬æ¬¡ç§»åŠ¨å¤±è´¥
+        return;
+    }
+    Block temp_block = this->snack_q.front();
+    if (temp_block.BlockMoveDown())
+    {
+        snack_q.push_front(temp_block);
+        move_success = 1;
+        // snack_q.pop_back();
+        snack_state = 2;
+    }
+    else
+    {
+        move_success = 0;
+        snack_die    = true;
+    }
 }
 
 void Snack::SnackMoveLeft()
 {
-	if (snack_state == 4)
-	{
-		move_success = 0; //±¾´ÎÒÆ¶¯Ê§°Ü
-		return;
-	}
-	Block temp_block = this->snack_q.front();
-	if (temp_block.BlockMoveLeft())
-	{
-		snack_q.push_front(temp_block);
-		move_success = 1;
-		//snack_q.pop_back();
-		snack_state = 3;
-	}
-	else
-	{
-		move_success = 0;
-		snack_die = true;
-	}
+    if (snack_state == 4)
+    {
+        move_success = 0;  // æœ¬æ¬¡ç§»åŠ¨å¤±è´¥
+        return;
+    }
+    Block temp_block = this->snack_q.front();
+    if (temp_block.BlockMoveLeft())
+    {
+        snack_q.push_front(temp_block);
+        move_success = 1;
+        // snack_q.pop_back();
+        snack_state = 3;
+    }
+    else
+    {
+        move_success = 0;
+        snack_die    = true;
+    }
 }
 
 void Snack::SnackMoveRight()
 {
-	if (snack_state == 3)
-	{
-		move_success = 0; //±¾´ÎÒÆ¶¯Ê§°Ü
-		return;
-	}
-	Block temp_block = this->snack_q.front();
-	if (temp_block.BlockMoveRight())
-	{
-		snack_q.push_front(temp_block);
-		move_success = 1;
-		//snack_q.pop_back();
-		snack_state = 4;
-	}
-	else
-	{
-		move_success = 0;
-		snack_die = true;
-	}
+    if (snack_state == 3)
+    {
+        move_success = 0;  // æœ¬æ¬¡ç§»åŠ¨å¤±è´¥
+        return;
+    }
+    Block temp_block = this->snack_q.front();
+    if (temp_block.BlockMoveRight())
+    {
+        snack_q.push_front(temp_block);
+        move_success = 1;
+        // snack_q.pop_back();
+        snack_state = 4;
+    }
+    else
+    {
+        move_success = 0;
+        snack_die    = true;
+    }
 }
 
-void Snack::SnackKeepMoving()  //±£³ÖÇ°Ò»¸ö×´Ì¬¼ÌĞøÒÆ¶¯
+void Snack::SnackKeepMoving()  // ä¿æŒå‰ä¸€ä¸ªçŠ¶æ€ç»§ç»­ç§»åŠ¨
 {
-	Block temp_block = this->snack_q.front();
-	switch (snack_state)
-	{
-	case 1:
-	{
-		SnackMoveUp();
-		break;
-	}
-	case 2:
-	{
-		SnackMoveDown();
-		break;
-	}
-	case 3:
-	{
-		SnackMoveLeft();
-		break;
-	}
-	case 4:
-	{
-		SnackMoveRight();
-		break;
-	}
-	default:
-		break;
-	}
+    Block temp_block = this->snack_q.front();
+    switch (snack_state)
+    {
+    case 1:
+    {
+        SnackMoveUp();
+        break;
+    }
+    case 2:
+    {
+        SnackMoveDown();
+        break;
+    }
+    case 3:
+    {
+        SnackMoveLeft();
+        break;
+    }
+    case 4:
+    {
+        SnackMoveRight();
+        break;
+    }
+    default: break;
+    }
 }
 
 bool Snack::IsMoveSuccess() const
 {
-	return this->move_success;
+    return this->move_success;
 }
 
-void Snack::SnackGrow()  
+void Snack::SnackGrow()
 {
-	this->snack_len++;
+    this->snack_len++;
 }
 
 void Snack::SnackTryEat(Apple& apple)
 {
-	if (IsSnackDie()) return;
-	if (!IsMoveSuccess()) return;
-	if (GetHeadX() == apple.GetAppleX() && GetHeadY() == apple.GetAppleY())
-	{
-		apple.RePlace(); 
-		SnackGrow();
-	}
-	else //Èç¹ûÃ»³Ôµ½£¬¾ÍÒª°ÑÎ²²¿µÄblockÒÆ³ı
-	{
-			snack_q.pop_back();
-	}
-	
+    if (IsSnackDie()) return;
+    if (!IsMoveSuccess()) return;
+    if (GetHeadX() == apple.GetAppleX() && GetHeadY() == apple.GetAppleY())
+    {
+        apple.RePlace();
+        SnackGrow();
+    }
+    else  // å¦‚æœæ²¡åƒåˆ°ï¼Œå°±è¦æŠŠå°¾éƒ¨çš„blockç§»é™¤
+    {
+        snack_q.pop_back();
+    }
 }
 unsigned int Snack::GetHeadX()
 {
-	return snack_q.front().GetBlockX();
+    return snack_q.front().GetBlockX();
 }
 
 unsigned int Snack::GetHeadY()
 {
-	return snack_q.front().GetBlockY();
+    return snack_q.front().GetBlockY();
 }
 
 unsigned int Snack::GetSnackSize()
 {
-	return snack_q.front().GetBlockSize();
+    return snack_q.front().GetBlockSize();
 }
 
 std::list<Block>::iterator Snack::GetHead()
 {
-	return this->snack_q.begin();
+    return this->snack_q.begin();
 }
 
 std::list<Block>::iterator Snack::GetEnd()
 {
-	return this->snack_q.end();
+    return this->snack_q.end();
 }
 
 unsigned int Snack::GetLength()
 {
-	return this->snack_len;
+    return this->snack_len;
 }
-
-
-
-
-
-

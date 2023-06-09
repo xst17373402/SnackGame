@@ -16,6 +16,12 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{8b6c92a8-f65d-451e-80e3-d65773602b92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SnakeGame">
+      <UniqueIdentifier>{8f22d4cb-eb14-4adc-9efe-3194d0f06702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SnakeGame">
+      <UniqueIdentifier>{1196200d-f11e-405f-8b3c-f9ed0f569a0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChiliWin.h">
@@ -57,8 +63,14 @@
     <ClInclude Include="COMInitializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Header Files\SnakeGame</Filter>
+    </ClInclude>
     <ClInclude Include="SnakeGame.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SnakeGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Apple.h">
+      <Filter>Header Files\SnakeGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +102,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SnakeGame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Source Files\SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SnakeGameConsts.h">
+      <Filter>Header Files\SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Apple.cpp">
+      <Filter>Source Files\SnakeGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

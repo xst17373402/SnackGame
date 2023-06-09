@@ -23,7 +23,9 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+
 #include "SnakeGame.h"
+#include "Apple.h"
 
 class Game
 {
@@ -47,6 +49,4 @@ private:
 	/********************************/
 	Snack snack;
 	Apple apple;
-
-
 };
