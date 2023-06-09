@@ -63,13 +63,13 @@
     <ClInclude Include="COMInitializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>Header Files\SnakeGame</Filter>
-    </ClInclude>
-    <ClInclude Include="SnakeGame.h">
-      <Filter>Header Files\SnakeGame</Filter>
-    </ClInclude>
     <ClInclude Include="Apple.h">
+      <Filter>Header Files\SnakeGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>Header Files\SnakeGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Snake.h">
       <Filter>Header Files\SnakeGame</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,16 +101,13 @@
     <ClCompile Include="COMInitializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SnakeGame.cpp">
-      <Filter>Source Files\SnakeGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Block.cpp">
-      <Filter>Source Files\SnakeGame</Filter>
-    </ClCompile>
-    <ClCompile Include="SnakeGameConsts.h">
-      <Filter>Header Files\SnakeGame</Filter>
-    </ClCompile>
     <ClCompile Include="Apple.cpp">
+      <Filter>Source Files\SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Panel.cpp">
+      <Filter>Source Files\SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Snake.cpp">
       <Filter>Source Files\SnakeGame</Filter>
     </ClCompile>
   </ItemGroup>

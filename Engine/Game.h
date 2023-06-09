@@ -6,7 +6,8 @@
 #include "Mouse.h"
 
 #include "Apple.h"
-#include "SnakeGame.h"
+#include "Panel.h"
+#include "Snake.h"
 
 class Game
 {
@@ -29,8 +30,10 @@ private:
     /********************************/
     /*  User Variables              */
     /********************************/
-    Snack snack;
+    Snake snake;
     Apple apple;
+
+    Panel m_panel;
 
     std::chrono::steady_clock::time_point m_last_time;
     static constexpr size_t               k_max_fps = 20;

@@ -30,13 +30,12 @@
 #include <windows.h>
 #include "MainWindow.h"
 
-#include "Block.h"
-
 Game::Game(MainWindow& wnd)
     : wnd(wnd)
     , gfx(wnd)
-    , snack()
+    , snake()
     , apple()
+    , m_panel()
     , m_last_time(std::chrono::steady_clock::now())
 {}
 
@@ -62,45 +61,24 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-    if (snack.IsSnackDie()) return;  // 目前的逻辑是snack死了就停了
+    if (snake.isDead()) return;  // 目前的逻辑是snack死了就停了
     
-    snack.processKeyboardInput(wnd.kbd);
+    snake.processKeyboardInput(wnd.kbd);
 
     // 每次移动过后判断snack有没有吃到苹果
-    snack.SnackTryEat(apple);
+    snake.update(m_panel, apple);
 }
 
 void Game::ComposeFrame()
 {
     // 画出apple的位置
-    unsigned int size    = apple.GetAppleSize();
-    unsigned int apple_x = size * apple.GetAppleX();
-    unsigned int apple_y = size * apple.GetAppleY();
-
-    for (unsigned int i = apple_x; i < apple_x + size; ++i)
-    {
-        for (unsigned int j = apple_y; j < apple_y + size; ++j)
-        {
-            gfx.PutPixel(i, j, 0, 255, 0);
-        }
-    }
+    m_panel.Draw(gfx, apple.GetAppleX(), apple.GetAppleY(), 0, 255, 0);
 
     // 遍历snack的身体  画出snack
-    size                                  = snack.GetSnackSize();
-    std::list<Block>::iterator snack_head = snack.GetHead();
-    std::list<Block>::iterator snack_end  = snack.GetEnd();
-    for (std::list<Block>::iterator it = snack_head; it != snack_end; ++it)
+    for (auto it = snake.begin(), end = snake.end(); it != end; ++it)
     {
-        Block        temp_block = *it;
-        unsigned int x          = size * temp_block.GetBlockX();
-        unsigned int y          = size * temp_block.GetBlockY();
-
-        for (unsigned int i = x; i < x + size; ++i)
-        {
-            for (unsigned int j = y; j < y + size; ++j)
-            {
-                gfx.PutPixel(i, j, 255, 0, 0);
-            }
-        }
+        int32_t x = it->first;
+        int32_t y = it->second;
+        m_panel.Draw(gfx, x, y, 255, 0, 0);
     }
 }
