@@ -1,135 +1,84 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
- *	Game.cpp																			  *
- *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20
+ ** Game.cpp
+ ** Copyright 2016 PlanetChili.net <http://www.planetchili.net>
+ **
  *																						  *
- *	This file is part of The Chili DirectX Framework.									  *
+ *	This file is part of The Chili DirectX Framework.
+ **
  *																						  *
- *	The Chili DirectX Framework is free software: you can redistribute it and/or modify	  *
- *	it under the terms of the GNU General Public License as published by				  *
- *	the Free Software Foundation, either version 3 of the License, or					  *
- *	(at your option) any later version.													  *
+ *	The Chili DirectX Framework is free software: you can redistribute it
+ *and/or modify it under the terms of the GNU General Public License as
+ *published by the Free Software Foundation, either version 3 of the License, or
+ *(at your option) any later version.
+ **
  *																						  *
- *	The Chili DirectX Framework is distributed in the hope that it will be useful,		  *
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
- *	GNU General Public License for more details.										  *
+ *	The Chili DirectX Framework is distributed in the hope that it will be
+ *useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	GNU General
+ *Public License for more details.
+ **
  *																						  *
- *	You should have received a copy of the GNU General Public License					  *
- *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
+ *	You should have received a copy of the GNU General Public License along
+ *with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.
+ **
  ******************************************************************************************/
-#include "MainWindow.h"
 #include "Game.h"
-#include <windows.h>
 
-Game::Game( MainWindow& wnd )
-	:
-	wnd( wnd ),
-	gfx( wnd ),
-	snack(),
-	apple()
-{
-}
+#include <thread>
+
+#include <windows.h>
+#include "MainWindow.h"
+
+Game::Game(MainWindow& wnd)
+    : wnd(wnd)
+    , gfx(wnd)
+    , snake()
+    , apple()
+    , m_panel()
+    , m_last_time(std::chrono::steady_clock::now())
+{}
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
-	UpdateModel();
-	ComposeFrame();
-	gfx.EndFrame();
+    auto curr_time = std::chrono::steady_clock::now();
+
+    gfx.BeginFrame();
+    UpdateModel();
+    ComposeFrame();
+    gfx.EndFrame();
+
+    auto duration =
+        std::chrono::duration<float>(curr_time - m_last_time).count();
+    if (duration < k_max_fps_delta_time)
+    {
+        std::this_thread::sleep_for(
+            std::chrono::duration<float>(k_max_fps_delta_time - duration));
+    }
+
+    m_last_time = curr_time;
 }
 
 void Game::UpdateModel()
 {
-	if (snack.IsSnackDie()) return;  //Ä¿Ç°µÄÂß¼­ÊÇsnackËÀÁË¾ÍÍ£ÁË
-	Keyboard::Event event = wnd.kbd.ReadKey(); //´ÓkbdÀàÖÐ»ñÈ¡Ò»¸ökeyÊÂ¼þ
-	//Èç¹ûÊÇ¡ü¡ý¡û¡úµÄ°´ÏÂÊÂ¼þ£¬Ôò¸Ä±äsnackÒÆ¶¯·½Ïò
-	if (event.IsPress())
-	{
-		unsigned char key_msg = event.GetCode();
-		switch (key_msg)
-		{
-		case VK_UP:
-		{
-			snack.SnackMoveUp();
-			break;
-		}
-		case VK_DOWN:
-		{
-			snack.SnackMoveDown();
-			break;
-		}
-		case VK_LEFT:
-		{
-			snack.SnackMoveLeft();
-			break;
-		}
-		case VK_RIGHT:
-		{
-			snack.SnackMoveRight();
-			break;
-		}
-		default:
-		{
-			snack.SnackKeepMoving();
-			break;
-		}
-		}	
-	}
-	else
-	{
-		snack.SnackKeepMoving();
-	}
+    if (snake.isDead()) return;  // ç›®å‰çš„é€»è¾‘æ˜¯snackæ­»äº†å°±åœäº†
+    
+    snake.processKeyboardInput(wnd.kbd);
 
-	//Ã¿´ÎÒÆ¶¯¹ýºóÅÐ¶ÏsnackÓÐÃ»ÓÐ³Ôµ½Æ»¹û
-	snack.SnackTryEat(apple);
-
+    // æ¯æ¬¡ç§»åŠ¨è¿‡åŽåˆ¤æ–­snackæœ‰æ²¡æœ‰åƒåˆ°è‹¹æžœ
+    snake.update(m_panel, apple);
 }
 
 void Game::ComposeFrame()
 {
-	unsigned int snack_len = snack.GetLength();
-	//¸ù¾Ýsnack_len ¿ØÖÆÐÝÃßÊ±¼ä£¬snack_lenÔ½´ó Ë¢ÐÂËÙ¶ÈÔ½¿ì
-	if (30 > 60 - 3 * snack_len)
-		Sleep(30);
-	else
-		Sleep(60 - 3 * snack_len);
-	
-	//»­³öappleµÄÎ»ÖÃ
-	unsigned int size = apple.GetAppleSize();
-	unsigned int apple_x = size *apple.GetAppleX();
-	unsigned int apple_y = size *apple.GetAppleY();
-	
-	for (unsigned int i = apple_x; i < apple_x + size; ++i)
-	{
-		for (unsigned int j = apple_y; j < apple_y + size; ++j)
-		{
-			gfx.PutPixel(i, j, 0, 255, 0);
-		}
-	}
-	
-	//±éÀúsnackµÄÉíÌå  »­³ösnack
-	size = snack.GetSnackSize();
-	std::list<Block>::iterator snack_head = snack.GetHead();
-	std::list<Block>::iterator snack_end = snack.GetEnd();
-	for (std::list<Block>::iterator it = snack_head; it != snack_end; ++it)
-	{
-		
-		Block temp_block = *it;
-		unsigned int x = size*temp_block.GetBlockX();
-		unsigned int y = size*temp_block.GetBlockY();
-		
-		for (unsigned int i = x; i < x + size; ++i)
-		{
-			for (unsigned int j = y; j < y + size; ++j)
-			{
-				gfx.PutPixel(i, j, 255, 0, 0);
-			}
-		} 
-	}
+    // ç”»å‡ºappleçš„ä½ç½®
+    m_panel.Draw(gfx, apple.GetAppleX(), apple.GetAppleY(), 0, 255, 0);
 
-	
-
-	
-	
+    // éåŽ†snackçš„èº«ä½“  ç”»å‡ºsnack
+    for (auto it = snake.begin(), end = snake.end(); it != end; ++it)
+    {
+        int32_t x = it->first;
+        int32_t y = it->second;
+        m_panel.Draw(gfx, x, y, 255, 0, 0);
+    }
 }
